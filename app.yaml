@@ -1,0 +1,10 @@
+runtime: php
+env: custom
+
+runtime_config:
+  document_root: .
+
+# [START gae_flex_storage_yaml]
+env_variables:
+  GOOGLE_STORAGE_BUCKET: "sbtagent182.info"
+# [END gae_flex_storage_yaml]
