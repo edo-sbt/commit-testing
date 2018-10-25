@@ -8,3 +8,6 @@ runtime_config:
 env_variables:
   GOOGLE_STORAGE_BUCKET: "sbtagent182.info"
 # [END gae_flex_storage_yaml]
+
+manual_scaling:
+  instances: 1
