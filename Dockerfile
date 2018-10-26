@@ -7,5 +7,4 @@ RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5
 RUN NR_INSTALL_KEY="2bd895f182e7998982392a29684afdc9d319a992" NR_INSTALL_SILENT=true newrelic-install install
 
-RUN ps
-RUN kill -s USR2 1
+RUN export SOMETHING=Somewhere
