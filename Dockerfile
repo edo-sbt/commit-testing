@@ -1,13 +1,19 @@
 FROM gcr.io/google-appengine/php:latest
-ENV DOCUMENT_ROOT /app
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update; DEBIAN_FRONTEND=noninteractive apt-get -y install wget sudo
-RUN wget -O - https://download.newrelic.com/548C16BF.gpg | sudo apt-key add -
-RUN echo 'deb http://apt.newrelic.com/debian/ newrelic non-free' | tee /etc/apt/sources.list.d/newrelic.list
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && DEBIAN_FRONTEND=noninteractive apt-get -y install newrelic-php5
-RUN chown -R root /opt/php71/bin
-RUN chown -R root /opt/php72/bin
-RUN chmod -R ug+rw /opt/php71/bin
-RUN chmod -R ug+rw /opt/php72/bin
-RUN NR_INSTALL_KEY="2bd895f182e7998982392a29684afdc9d319a992" NR_INSTALL_SILENT=true NR_INSTALL_PHPLIST=/opt/php71/bin;/opt/php72/bin newrelic-install install
+RUN \
+  curl -L https://download.newrelic.com/php_agent/release/newrelic-php5-8.3.0.226-linux.tar.gz | tar -C /tmp -zx && \
+  NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 /tmp/newrelic-php5-*/newrelic-install install && \
+  rm -rf /tmp/newrelic-php5-* /tmp/nrinstall* && \
+  sed -i -e 's/"REPLACE_WITH_REAL_KEY"/"2bd895f182e7998982392a29684afdc9d319a992"/' \
+  -e 's/newrelic.appname = "PHP Application"/newrelic.appname = "new relic testing"/' \
+  $(find / -name newrelic.ini)
+
+RUN PIDFile=$(find / -name nginx.pid)
+RUN PIDFile=$(find / -name nginx.pid) && /etc/init.d/nginx restart
+
+
+ENV DOCUMENT_ROOT /app
+WORKDIR /app/
+
+COPY index.php .
 
