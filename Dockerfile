@@ -4,4 +4,3 @@ ENV DOCUMENT_ROOT /app
 WORKDIR /app/
 
 COPY . .
-
